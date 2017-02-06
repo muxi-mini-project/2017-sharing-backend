@@ -1,26 +1,18 @@
-# coding: utf-8
-
+#coding:utf-8
+from flask import render_template, redirect, request, url_for, flash
 from . import auth
-from flask import render_template, url_for, redirect, flash
-from flask_login import login_user, logout_user, current_user, login_required
-from app.models import User
+from ..models import User
 from .forms import LoginForm
+from flask_login import login_user
 
 
-@auth.route('/login', methods=['GET', 'POST'])
+@auth.route('/login')
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username = form.username.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):
-            login_user(user)
-            return redirect('/admin')
+            login_user(user, form.remeber_me.data)
+            return redirect(request.arg.get('next') or url_for('main.index'))
+        flash('您的邮箱地址或密码有误')
     return render_template('auth/login.html', form=form)
-
-
-@login_required
-@auth.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('auth.login'))
-

@@ -1,12 +1,6 @@
-# coding: utf-8
-
+#coding:utf-8
 from flask import Blueprint
 
-auth = Blueprint(
-    'auth',
-    __name__,
-    template_folder = 'templates',
-    static_folder = 'static'
-)
+auth = Blueprint('auth', __name__)
 
-from . import views, forms
+from . import views
