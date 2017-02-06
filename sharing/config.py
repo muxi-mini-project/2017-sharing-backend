@@ -27,10 +27,13 @@ common configuration
 """
 class Config:
     """common configuration"""
-    SECRET_KEY = os.environ.get("SECRET_KEY") or "hard to guess string"
+    SECRET_KEY = os.environ.get("SECRET_KEY") or "Muxisharing"
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_RECORD_QUERIES = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SHARING_MAIL_SUBJECT_PREFIX = '[SHARING]'
+    SHARING_MAIL_SENDER = '15387550833@163.com'
+    SHARING_MAIL_ADMIN = os.environ.get('SHARING_ADMIN')
 
     @staticmethod
     def init_app(app):
@@ -54,7 +57,13 @@ class DevelopmentConfig(Config):
     """development configuration"""
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "data-dev.sqlite")
-
+    MAIL_SERVER = 'stmp.163.com'
+    MAIL_PORT = 465
+    MAIL_USE_TSS = True
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
+            'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
 """
 testing configuration
  -- TESTING: True
@@ -66,7 +75,7 @@ class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "data-test.sqlite")
     WTF_CSRF_ENABLED = False
-
+    
 # production configuration
 class ProductionConfig(Config):
     """production configuration"""
