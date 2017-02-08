@@ -77,6 +77,7 @@ class User(db.Model, UserMixin):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     password_hash = db.Column(db.String(164))
     confirmed = db.Column(db.Boolean,default = False)
+	posts = db.relationship('Post',backerf = 'author',lazy = 'dynamic')	
 
     @property
     def password(self):
@@ -117,6 +118,14 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return "<User %r>" % self.username
+
+class Post(db.Model)
+    __tablename__ = 'posts' #文章
+	id = db.Column(db.Integer,primary_key = True)
+	post_type = db.Column(db.String,nullable = False,default = 'share')#文章默认为分享
+	body = db.Column(db.Text)
+	timestamp = db.Column(db.DateTime,Index = True,defualt = datetime.utcnow)
+	auther_id = db.Column(db.Integer ,db.ForeignKey('users.id')
 
 
 class AnonymousUser(AnonymousUserMixin):
