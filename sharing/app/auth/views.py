@@ -4,7 +4,7 @@ from . import auth
 from flask import render_template, url_for, redirect, flash
 from flask_login import login_user, logout_user, current_user, login_required
 from app.models import User
-from .forms import LoginForm,RegistrationForm
+from .forms import LoginForm,RegistrationForm,ChangePasswordForm
 from flask.ext.login import current_user
 
 @auth.route('/register',methods = ['GET','POST'])
@@ -58,6 +58,30 @@ def resend_confirmation():
     flash('新的确认邮件已经发往了你的邮箱')
     return redirect(url_for('main.index'))
 
+@auth.route('/change-password',methods = ['GET','POST'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        if current_user.verify_password(form.old_password.data):
+            current_user.password = form.password.data
+            db.session.add(current_user)
+            flash('你的密码已经被更改')
+            return redirect(url_for('auth.login'))
+        else:
+            flash('密码无效')
+    return render_template("auth/change_password.html,form = form ") #Without html documents
+
+
+@auth.route('/change-username',method = ['GET','POST'])
+@login_required
+def change_username():
+    form = ChangeUsername()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        db.session.add(current_user)
+        flash('你的用户名已修改')
+    return render_template("auth/change_username.html,form = form ")  #Without html documents
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():

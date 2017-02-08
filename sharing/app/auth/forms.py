@@ -12,8 +12,8 @@ class RegistrationForm(Form):
                                              Email()])
 	username = StringField('用户名',validators=[
         Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
-                                          'Usernames must have only letters, '
-                                          'numbers, dots or underscores')])
+                                          '用户名须由字母，数字，点“.",下划线”_“组成 '
+                                          )])
 	password = PasswordField('密码',validators = [
 		Required(),EqualTo('password2',message = 'Password must match.')])
 	password2 = PasswordField('确认密码',validators = [Required()])
@@ -33,5 +33,18 @@ class LoginForm(Form):
     password = PasswordField('密码', validators=[DataRequired()])
     submit = SubmitField('登录')
 
+class ChangPasswordForm(FlaskForm):
+	old_password = PasswordField('旧有密码',validators=[Required()])
+	password = PasswordField('新密码',validators = [Required(),
+								EqualTo('password2',message = '密码须一致')])
+	password2 = PasswordField('再次输入密码',validators = [Required()])
+	submit = SubmitField('修改密码')
+
+class ChangeUsername(FlaskForm):
+	username = StringField('用户名',validators=[
+    Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
+                                          '用户名须由字母，数字，点“.",下划线”_“组成 '
+                                          )])
+	submit = SubmitField('修改用户名')
 
 
