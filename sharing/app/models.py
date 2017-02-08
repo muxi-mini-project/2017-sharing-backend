@@ -1,4 +1,5 @@
 #-coding:utf:8--
+
 """
 sql models
 
@@ -12,9 +13,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin, current_user
 from wtforms.validators import Email
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app
-from . import db
-
+from flask import current_app,request
+from datetime import datetime
+import hashlib
 
 # permissions
 class Permission:
@@ -77,7 +78,7 @@ class User(db.Model, UserMixin):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     password_hash = db.Column(db.String(164))
     confirmed = db.Column(db.Boolean,default = False)
-	posts = db.relationship('Post',backerf = 'author',lazy = 'dynamic')	
+    posts = db.relationship('Post',backref = 'author',lazy = 'dynamic')	
 
     @property
     def password(self):
@@ -119,21 +120,19 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return "<User %r>" % self.username
 
-class Post(db.Model)
+class Post(db.Model):
     __tablename__ = 'posts' #文章
-	id = db.Column(db.Integer,primary_key = True)
-	post_type = db.Column(db.String,nullable = False,default = 'share')#文章默认为分享
-	body = db.Column(db.Text)
-	timestamp = db.Column(db.DateTime,Index = True,defualt = datetime.utcnow)
-	auther_id = db.Column(db.Integer ,db.ForeignKey('users.id')
-
+    id = db.Column(db.Integer,primary_key = True)
+    post_type = db.Column(db.String,nullable = False,default = 'share')#文章默认为分享
+    body = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime,index = True,default = datetime.utcnow)
+    auther_id = db.Column(db.Integer ,db.ForeignKey('users.id'))
 
 class AnonymousUser(AnonymousUserMixin):
-    """ anonymous user """
-    def is_admin(self):
+    def can(self, permissions):
         return False
-
+    def is_administrator(self):
+        return False
 login_manager.anonymous_user = AnonymousUser
-
 # you can writing your models here:
 

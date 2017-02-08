@@ -33,7 +33,7 @@ class LoginForm(Form):
     password = PasswordField('密码', validators=[DataRequired()])
     submit = SubmitField('登录')
 
-class ChangPasswordForm(FlaskForm):
+class ChangePasswordForm(FlaskForm):
 	old_password = PasswordField('旧有密码',validators=[Required()])
 	password = PasswordField('新密码',validators = [Required(),
 								EqualTo('password2',message = '密码须一致')])

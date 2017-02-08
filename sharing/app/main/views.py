@@ -13,20 +13,20 @@ def toshare():
 	form = PostForm()
 	if current_user.can(Permission.WRITE_ARTICLES) and form.validate_on_submit():
 		post = Post(body = form.body.data,
-					auther = current_user._get_current_object()
-					share_type = form.post_type.data)      #分享OR原创
+					auther = current_user._get_current_object(),
+					post_type = form.post_type.data)      #分享OR原创
 		db.session.add(post)
 		db.session.commit()
 		return redirect(url_for('.index'))
 
-@main.route('/feed/share',method = ['GET']
+@main.route('/feed/share',method = ['GET'])
 def post_share():
 	form =PostForm()
-	posts = Post.query.filter_by(post_type=form.post_type.data='share').order_by(Post.timestamp.desc()).all()
-return render_template('share.html',form = form,posts = posts) #分享的文章页面
+	posts = Post.query.filter_by(post_type=form.post_type.data).filter_by(post_type = 'share').order_by(Post.timestamp.desc()).all()
+	return render_template('share.html',form = form,posts = posts) #分享的文章页面
 
-@main.route('/feed/original',method = ['GET']
+@main.route('/feed/original',method = ['GET'])
 def post_original():
 	form = PostForm()
-	posts = Post.query.filter_by(post_type=form.post_type.data ='original').order_by(Post.timestamp.desc()).all()
-return render_template('original.html',form = form,posts = posts) #原创的文章页面
+	posts = Post.query.filter_by(post_type=form.post_type.data).filter_by(post_type = 'original').order_by(Post.timestamp.desc()).all()
+	return render_template('original.html',form = form,posts = posts) #原创的文章页面
