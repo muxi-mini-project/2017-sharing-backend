@@ -76,7 +76,6 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, index=True, nullable=False)
     username = db.Column(db.String(64), unique=True, index=True, nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-<<<<<<< HEAD
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
     name = db.Column(db.String(64), doc=u"真实姓名")
@@ -130,11 +129,9 @@ class User(UserMixin, db.Model):
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = hashlib.md5(
                 self.email.encode('utf-8')).hexdigest()
-=======
     password_hash = db.Column(db.String(164))
     confirmed = db.Column(db.Boolean,default = False)
     posts = db.relationship('Post',backref = 'author',lazy = 'dynamic')	
->>>>>>> ca681701843dee0fb437de0177d4a845bfcae024
 
     @property
     def password(self):
