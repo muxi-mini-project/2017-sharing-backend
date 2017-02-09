@@ -16,6 +16,13 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app,request
 from datetime import datetime
 import hashlib
+import enum
+
+class GenderEnum(enum.Enum):
+    male = '1'
+    famale = '2'
+    secrect = '0'
+
 
 class Permission:
     FOLLOW = 0x01
@@ -262,25 +269,13 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
-class Post(db.Model):
-    __tablename__ = 'posts' #文章
-    id = db.Column(db.Integer,primary_key = True)
-    post_type = db.Column(db.String,nullable = False,default = 'share')#文章默认为分享
-    body = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime,index = True,default = datetime.utcnow)
-    auther_id = db.Column(db.Integer ,db.ForeignKey('users.id'))
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
         return False
-<<<<<<< HEAD
 
-=======
->>>>>>> ca681701843dee0fb437de0177d4a845bfcae024
     def is_administrator(self):
         return False
-login_manager.anonymous_user = AnonymousUser
-<<<<<<< HEAD
 
 
 @login_manager.user_loader
@@ -348,7 +343,4 @@ class Post(db.Model):
             tags=allowed_tags, strip=True))
 
 db.event.listen(Post.body, 'set', Post.on_changed_body)
-=======
-# you can writing your models here:
->>>>>>> ca681701843dee0fb437de0177d4a845bfcae024
 
