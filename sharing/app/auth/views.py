@@ -1,3 +1,12 @@
+<<<<<<< HEAD
+#coding:utf-8
+from flask import render_template, redirect, request, url_for, flash
+from . import auth
+from ..models import User
+from .forms import LoginForm, RegisterForm
+from flask_login import login_user, logout_user, login_required
+from flask_login import current_user 
+=======
 #-coding:utf-8--
 
 from . import auth
@@ -82,17 +91,51 @@ def change_username():
         db.session.add(current_user)
         flash('你的用户名已修改')
     return render_template("auth/change_username.html,form = form ")  #Without html documents
+>>>>>>> ca681701843dee0fb437de0177d4a845bfcae024
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    ''' 登录系统 '''
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username = form.username.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):
-            login_user(user)
-            return redirect('/admin')
+            login_user(user, form.remeber_me.data)
+            flash(u"欢迎回来， %s ！" % current_user.username)
+            #next键下保存了上一次用户登出的时url
+            return redirect(request.args.get('next') or url_for('main.index'))
+        flash(u'您的邮箱地址或密码有误')
     return render_template('auth/login.html', form=form)
 
+<<<<<<< HEAD
+#登出
+@auth.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash(u'你已经退出当前登录')
+    return redirect(url_for('main.index'))
+
+#注册功能待完成
+@auth.route('/register',methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        user = User(email=form.email.data,
+                  
+                )
+
+@auth.before_app_request
+def before_request():
+    if current_user.is_authenticated:
+        curretnt_user.ping()
+        if not current_user.confirmed \
+                and request.endpoint[:5] != 'auth.':
+            return render_template(url_for('auth.unconfirmed'))
+
+
+
+=======
 
 @auth.route('/logout')
 @login_required
@@ -101,4 +144,6 @@ def logout():
     logout_user()
     flash('你的账号已登出。')
     return redirect(url_for('auth.login'))
+>>>>>>> ca681701843dee0fb437de0177d4a845bfcae024
 
+        

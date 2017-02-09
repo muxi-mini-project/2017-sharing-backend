@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SHARING{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>欢迎来到趣分享, {% if current_user.is_authrnticated %}{{ current_user.username }}
+        {% else %}匿名用户{% endif %}!
+    </h1>
+</div>
+{% endblock %}
