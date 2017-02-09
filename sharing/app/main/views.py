@@ -1,14 +1,11 @@
-<<<<<<< HEAD
 #coding:utf-8
 from flask import render_template, session, redirect, url_for, current_app
 from .. import db
 from ..models import User
 from ..email import send_email
-=======
-#-coding:utf-8--
->>>>>>> ca681701843dee0fb437de0177d4a845bfcae024
 from . import main
 from .forms import NameForm
+from flask_login import current_user
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -76,3 +73,5 @@ def post_original():
 	form = PostForm()
 	posts = Post.query.filter_by(post_type=form.post_type.data).filter_by(post_type = 'original').order_by(Post.timestamp.desc()).all()
 	return render_template('original.html',form = form,posts = posts) #原创的文章页面
+
+@admin
