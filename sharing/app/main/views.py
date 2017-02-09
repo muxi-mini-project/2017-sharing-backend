@@ -60,7 +60,7 @@ def toshare():
 					post_type = form.post_type.data)      #分享OR原创
 		db.session.add(post)
 		db.session.commit()
-		return redirect(url_for('.index'))
+		return redirect('toshare.html',form = form,posts = posts)
 
 @main.route('/feed/share',method = ['GET'])
 def post_share():
