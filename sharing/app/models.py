@@ -13,10 +13,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin, current_user
 from wtforms.validators import Email
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app,request
+from flask import current_app, request
 from datetime import datetime
 import hashlib
-import enum
 
 class Permission:
     COMMENT = 0x02

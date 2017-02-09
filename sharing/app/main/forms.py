@@ -1,17 +1,18 @@
 
 #coding:utf-8
-from wtforms import StringField, SubmitField, TextAreaField
+from wtforms import StringField, SubmitField, TextAreaField, RadioField
 from wtforms.validators import Required
 from flask_wtf import Form
-from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, BooleanField, SelectField,\
     SubmitField,RadioField
 from wtforms.validators import DataRequired,Required,Length,Email,Regexp,EqualTo
 from flask.ext.pagedown import PageDownField
 
-class PostForm(FlaskForm):
-    body = PageDownField("想分享点什么？", validators=[Required()])
-    post_type = RadioField ('文章类型',choices = [('share','share' ),('original','original')])
+class PostForm(Form):
+    #张可，看到的话提醒你一句，这里的FlaskForm和From是一个东西不要重复导入
+    body = PageDownField(u"想分享点什么？", validators=[Required()])
+    post_type = RadioField (u'文章类型',choices =\
+            [('share',u'趣分享'),('original', u'博主原创')])
     submit = SubmitField('发布')
 
 
@@ -32,7 +33,7 @@ class EditProfileAdminForm(Form):
     username = StringField(u'用户名', validators=[Required()])
     confirmed = BooleanField(u'是否验证验证')
     role = SelectField(u'用户角色', coerce=int)
-    gender = SelectField(u'性别')
+    gender = SelectField(u'性别', coerce=int)
     name = StringField(u'真实姓名')#长度有限制
     location = StringField(u'地址')#长度有限制
     about_me = TextAreaField(u'关于我')
@@ -43,7 +44,8 @@ class EditProfileAdminForm(Form):
         super(EditProfileAdminForm, self).__init__(*args, **kwargs)
         self.role.choices = [(role.id, role.name)
                             for role in Role.query.order_by(Role.name).all()]
-        self.gender.choices = [u'男', u'女']
+        self.gender.choices = [(1,u'男'),
+                               (0,u'女')]#这样写下拉列表中会出现‘男’，‘女’两种选项吗？
         self.user = user
 
     def validate_email(self, field):

@@ -4,7 +4,7 @@ from .. import db
 from ..models import User
 from ..email import send_email
 from . import main
-from .forms import NameForm, EditProfileForm, PostForm
+from .forms import NameForm,EditProfileAdminForm ,EditProfileForm, PostForm
 from flask_login import current_user
 
 @main.route('/', methods=['GET', 'POST'])
@@ -78,4 +78,25 @@ def post_original():
 @login_required
 @admin_required
 def edit_profile_admin(id):
-    user = User
+    user = User.query.get_or_404(id)
+    form = EditProfileAdminForm(user=user)        #这个表需要一个user对象
+    if form.validate_on_submit():
+        user.email = form.email.data
+        user.name = form.name.data
+        user.location = form.location.data
+        user.confirmed = form.comfirmed.data
+        user.role = Role.query.get(form.role.data)#form.role.data返回的是一个int类型
+        user.gender = form.gender.data            #也就是说这里返回一个int类型
+        user.about_me = form.about_me.data
+        db.session.add(user)
+        flash(u'资料界面已被更新')
+        return redirect(url_for('.user', username=user.name))
+    form.email.data = user.email
+    form.username.data = user.confirmed
+    form.name.data = user.name
+    form.location.data = user.location
+    form.gender.data = user.gender                #我这里要返回一个string对象
+    form.role.data = user.role_id                 #这个返回的是int值
+    form.confirmed.data = user.confirmed
+    form.about_me.data = user.abput_me
+    return render_template('edit_profile.html', form=form, user=user)
