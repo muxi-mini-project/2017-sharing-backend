@@ -4,7 +4,7 @@ from .. import db
 from ..models import User
 from ..email import send_email
 from . import main
-from .forms import NameForm
+from .forms import NameForm, EditProfileForm, PostForm
 from flask_login import current_user
 
 @main.route('/', methods=['GET', 'POST'])
@@ -64,7 +64,7 @@ def toshare():
 
 @main.route('/feed/share',method = ['GET'])
 def post_share():
-	form =PostForm()
+	form = PostForm()
 	posts = Post.query.filter_by(post_type=form.post_type.data).filter_by(post_type = 'share').order_by(Post.timestamp.desc()).all()
 	return render_template('share.html',form = form,posts = posts) #分享的文章页面
 
@@ -74,4 +74,8 @@ def post_original():
 	posts = Post.query.filter_by(post_type=form.post_type.data).filter_by(post_type = 'original').order_by(Post.timestamp.desc()).all()
 	return render_template('original.html',form = form,posts = posts) #原创的文章页面
 
-@admin
+@main.route('/edit-profile/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def edit_profile_admin(id):
+    user = User
