@@ -18,7 +18,7 @@ def index():
             session['known'] = False
             if current_app.config['FLASKY_ADMIN']:
                 send_email(current_app.config['FLASKY_ADMIN'], 'New User',
-                           'mail/new_user', user=user)
+                         'mail/new_user', user=user)
         else:
             session['known'] = True
         session['name'] = form.name.data
@@ -60,7 +60,7 @@ def toshare():
 					post_type = form.post_type.data)      #分享OR原创
 		db.session.add(post)
 		db.session.commit()
-		return redirect('toshare.html',form = form,posts = posts)
+		return redirect(url_for('.index'))
 
 @main.route('/feed/share',method = ['GET'])
 def post_share():

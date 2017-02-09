@@ -18,15 +18,9 @@ from datetime import datetime
 import hashlib
 import enum
 
-class GenderEnum(enum.Enum):
-    male = '1'
-    famale = '2'
-    secrect = '0'
-
-
 class Permission:
-    FOLLOW = 0x01
     COMMENT = 0x02
+    FOLLOW = 0x01
     WRITE_ARTICLES = 0x04
     MODERATE_COMMENTS = 0x08
     THUMBS_UP = 0x16
@@ -90,7 +84,7 @@ class User(UserMixin, db.Model):
     about_me = db.Column(db.Text(), doc="introduction")
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
-    gender = db.Column(db.Enum(GenderEnum)) #这里应该用枚举，但是不是很清楚怎么用
+    gender = db.Column(db.String(8)) #这里应该用枚举，但是不是很清楚怎么用
     avatar_hash = db.Column(db.String(32))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     followed = db.relationship('Follow',
