@@ -1,13 +1,5 @@
 #-coding:utf:8--
 
-"""
-sql models
-
-    use: Flask-SQLAlchemy
-    -- http://flask-sqlalchemy.pocoo.org/2.1/
-
-"""
-
 from . import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin, current_user
