@@ -310,6 +310,7 @@ class Post(db.Model):
     body_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow,
             doc="created_at")
+    post_type = db.Column(db.String,nullable = False,default = 'share')#文章类型默认为分享
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     comments = db.relationship('Comment', backref='post',lazy='dynamic')
     #这里是一个用户对文章的点赞，每位用户对一篇文章只可以点一次赞，而且可以取消点赞，具体怎么实现有待商榷,很明确的是这里要用到many

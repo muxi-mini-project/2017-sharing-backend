@@ -1,10 +1,10 @@
-<<<<<<< HEAD
+
 #coding:utf-8
 from flask import render_template, session, redirect, url_for, current_app
 from .. import db
 from ..models import User
 from ..email import send_email
-=======
+
 #-coding:utf-8--
 >>>>>>> ca681701843dee0fb437de0177d4a845bfcae024
 from . import main
@@ -65,14 +65,27 @@ def toshare():
 		db.session.commit()
 		return redirect(url_for('.index'))
 
+
 @main.route('/feed/share',method = ['GET'])
 def post_share():
 	form =PostForm()
 	posts = Post.query.filter_by(post_type=form.post_type.data).filter_by(post_type = 'share').order_by(Post.timestamp.desc()).all()
 	return render_template('share.html',form = form,posts = posts) #分享的文章页面
+#share type articles' id
+@main.route('/feed/share/<int:id>')
+def post_share(id):
+    post = Post.query.get_or_404(id)
+    return render_template('article.html',posts = [post])
+
+
 
 @main.route('/feed/original',method = ['GET'])
 def post_original():
 	form = PostForm()
 	posts = Post.query.filter_by(post_type=form.post_type.data).filter_by(post_type = 'original').order_by(Post.timestamp.desc()).all()
 	return render_template('original.html',form = form,posts = posts) #原创的文章页面
+#original type ariticles's id
+@main.route('/feed/original/<int:id>')
+def post_original(id):
+    post = Post.query.get_or_404(id)
+    return render_template('article.html',posts = [post])
