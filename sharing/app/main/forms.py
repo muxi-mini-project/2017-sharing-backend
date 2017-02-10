@@ -16,7 +16,10 @@ class PostForm(Form):
             [('share',u'趣分享'),('original', u'博主原创')])
     submit = SubmitField('发布')
 
-
+class CommentForm(Form):
+    body = StringField('',validators = [Required()])
+    submit = SubmitField('评论')
+    
 class NameForm(Form):
     name = StringField(u'您的姓名', validators=[Required()])
     submit = SubmitField(u'提交')

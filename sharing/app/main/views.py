@@ -1,17 +1,18 @@
 #coding:utf-8
-from flask import render_template, session, redirect, url_for, current_app
+from flask import render_template, redirect, url_for, abort, flash, request,\
+                  current_app, make_response
 from .. import db
-from ..models import User, Post
+from ..models import Role, User, Post, Comment
 from ..email import send_email
 from . import main
-from .forms import NameForm,EditProfileAdminForm ,EditProfileForm, PostForm
+from .forms import NameForm,EditProfileAdminForm ,EditProfileForm, PostForm,CommentForm
 from flask_login import current_user,login_required
 from ..decorators import admin_required, permission_required
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
     return "root directory"
-
+#用户资料页面
 @main.route('/user/<username>')
 def user(username):
     user = User.query.filter_by(username=username).first()
@@ -99,10 +100,27 @@ def edit_profile_admin(id):
     return render_template('edit_profile.html', form=form, user=user)
 
 #具体文章的路由
-@main.route('/feed/post/<int:post_id>')
+@main.route('/feed/post/<int:post_id>', methods = ['GET','POST'])
 def show_post(post_id):
     post = Post.query.filter_by(id=post_id).get_or_404()
-    render_template("show_post.html", post=post)
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment = Comment(body = form.body.data,
+                            post = post,
+                            author = current_user._get_current_object())
+        db.session.add(comment)
+        flash('您的评论已提交')
+        return redirect(url_for('.post',id = post_id,page = -1))
+    page = request.args.get('page',1,type = int)
+    if page == -1:
+        page = (post.comments.count() - 1) / \
+                current_app.config['FLASKY_COMMENTS_PRE_PAGE'] + 1
+    pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
+                    page,per_page = current_app.comfig['FLASKY_COMMENTS_PRE_PAGE'],
+                    error_out = False)
+    comment = pagination.items
+    return render_template("show_post.html", post=[post], form = form ,
+                            comments = comments ,pagination = pagination)
 
 #关注者的文章路由
 @main.route('/feed/followed',methods = ['GET'])
