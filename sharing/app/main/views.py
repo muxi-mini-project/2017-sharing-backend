@@ -35,7 +35,7 @@ def edit_profile():
     form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', form=form)
 
-
+#去分享的路由
 @main.route('/toshare',methods = ['GET','POST'])
 def toshare():
     form = PostForm()
@@ -47,10 +47,10 @@ def toshare():
 	db.session.commit()
 	return redirect(url_for('.index'))
 
-#去分享的路由
+#趣分享的路由
 @main.route('/feed/share',methods = ['GET'])
 def post_share():
-	posts_queryobj = Post.query.filter_by(post_type ='share').order_by\
+        posts_queryobj = Post.query.filter_by(post_type ='share').order_by\
                 (Post.timestamp.desc())
 	page = request.args.get('page', 1, type=int)
         pagination = posts_queryobj.paginate(
@@ -62,7 +62,6 @@ def post_share():
 #博主原创的路由
 @main.route('/feed/original',methods = ['GET'])
 def post_original():
-	form = PostForm()
 	posts_queryobj = Post.query.filter_by(post_type =\
                 'original').order_by(Post.timestamp.desc())
 	page = request.args.get('page', 1, type=int)
@@ -102,6 +101,17 @@ def edit_profile_admin(id):
 #具体文章的路由
 @main.route('/feed/post/<int:post_id>')
 def show_post(post_id):
-    post = Post.query.filter_by(id=post_id).first()
+    post = Post.query.filter_by(id=post_id).get_or_404()
     render_template("share_post.html", post=post)
+
+#关注者的文章路由
+@main.route('/feed/followed',methods = ['GET'])
+def post_followed():
+        query = current_user.followed_posts
+        pagination = query.order_by(Post.timestamp.desc()).paginate(
+                                    page,per_page =current_app.config['SHARING_POSTS_PER_PAGE'],
+                                    error_out = False)
+        posts = pagination.items
+        return render_template('followed_post.html',posts=posts,pagination=pagination)
+
 
