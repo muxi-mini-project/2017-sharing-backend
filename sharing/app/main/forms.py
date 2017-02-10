@@ -6,10 +6,11 @@ from flask_wtf import Form
 from wtforms import StringField, TextAreaField, BooleanField, SelectField,\
     SubmitField,RadioField
 from wtforms.validators import DataRequired,Required,Length,Email,Regexp,EqualTo
-from flask.ext.pagedown import PageDownField
+from flask_pagedown.fields import PageDownField
 
 class PostForm(Form):
     #张可，看到的话提醒你一句，这里的FlaskForm和From是一个东西不要重复导入
+    #知道啦
     body = PageDownField(u"想分享点什么？", validators=[Required()])
     post_type = RadioField (u'文章类型',choices =\
             [('share',u'趣分享'),('original', u'博主原创')])
@@ -17,8 +18,8 @@ class PostForm(Form):
 
 
 class NameForm(Form):
-    name = StringField('What is your name?', validators=[Required()])
-    submit = SubmitField('Submit')
+    name = StringField(u'您的姓名', validators=[Required()])
+    submit = SubmitField(u'提交')
 
 
 class EditProfileForm(Form):

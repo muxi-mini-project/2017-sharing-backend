@@ -1,12 +1,5 @@
 #-coding:utf:8--
 
-"""
-sql models
-
-    use: Flask-SQLAlchemy
-    -- http://flask-sqlalchemy.pocoo.org/2.1/
-
-"""
 
 from . import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -331,7 +324,7 @@ class Post(db.Model):
     def on_changed_body(target, value, oldvalue, initiator):
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
                         'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'p']
+                        'h1', 'h2', 'h3', 'p','br']
         target.body_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
             tags=allowed_tags, strip=True))

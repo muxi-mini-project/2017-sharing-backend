@@ -71,7 +71,7 @@ def change_password():
     return render_template("auth/change_password.html",form = form) #Without html documents
 
 
-@auth.route('/change-username',method = ['GET','POST'])
+@auth.route('/change-username',methods = ['GET','POST'])
 @login_required
 def change_username():
     form = ChangeUsername()

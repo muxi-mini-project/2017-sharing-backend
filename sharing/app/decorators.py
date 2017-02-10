@@ -11,7 +11,7 @@ def permission_required(permission):
                 abort(403)
             return f(*arg, **kwargs)
         return decorated_function
-    return decoretor
+    return decorator
 
 def admin_required(f):
     return permission_required(Permission.ADMINISTER)(f)

@@ -10,3 +10,9 @@
     </h1>
 </div>
 {% endblock %}
+
+<!-- MarkDown 书写区域-->
+{{% block scripts %}}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{{% endblock %}}

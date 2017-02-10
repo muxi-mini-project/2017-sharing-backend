@@ -5,7 +5,8 @@ from ..models import User, Post
 from ..email import send_email
 from . import main
 from .forms import NameForm,EditProfileAdminForm ,EditProfileForm, PostForm
-from flask_login import current_user
+from flask_login import current_user,login_required
+from ..decorators import admin_required, permission_required
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -47,14 +48,14 @@ def toshare():
 	return redirect(url_for('.index'))
 
 #去分享的路由
-@main.route('/feed/share',method = ['GET'])
+@main.route('/feed/share',methods = ['GET'])
 def post_share():
 	form = PostForm()
 	posts = Post.query.filter_by(post_type=form.post_type.data).filter_by(post_type = 'share').order_by(Post.timestamp.desc()).all()
 	return render_template('share.html',form = form,posts = posts) #分享的文章页面
 
 #博主原创的路由
-@main.route('/feed/original',method = ['GET'])
+@main.route('/feed/original',methods = ['GET'])
 def post_original():
 	form = PostForm()
 	posts = Post.query.filter_by(post_type=form.post_type.data).filter_by(post_type = 'original').order_by(Post.timestamp.desc()).all()

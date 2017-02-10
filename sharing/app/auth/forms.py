@@ -32,14 +32,14 @@ class RegisterForm(Form):
 		raise ValidationError(u'该用户名已被注册')
 
 
-class ChangePasswordForm(FlaskForm):
+class ChangePasswordForm(Form):
 	old_password = PasswordField(u'旧有密码',validators=[Required()])
 	password = PasswordField(u'新密码',validators = [Required(),
 							EqualTo('password2',message=u'密码须一致')])
 	password2 = PasswordField(u'再次输入密码',validators = [Required()])
 	submit = SubmitField(u'修改密码')
 
-class ChangeUsername(FlaskForm):
+class ChangeUsername(Form):
     username = StringField('用户名',validators=[Required(), 
                                                 Length(1, 64), 
                                                 Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
