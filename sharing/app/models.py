@@ -79,6 +79,7 @@ class User(UserMixin, db.Model):
     gender = db.Column(db.String(8)) #这里应该用枚举，但是不是很清楚怎么用
     avatar_hash = db.Column(db.String(32))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    comments = db.relationship('Comment',backref = 'author',lazy = 'dynamic')
     followed = db.relationship('Follow',
                                foreign_keys=[Follow.follower_id],
                                backref=db.backref('follower', lazy='joined'),
@@ -281,7 +282,11 @@ class Comment(db.Model):
     @staticmethod
     def on_changed_body(target,value,oldvalue,initiator):
         allowed_tags = ['a','abbr','acronym','b','code','em','i','strong']
-        target.body_html = bleach.linkify(bleach.clean(markdown(value,output_format='html'),tags=allowed_tags,strip=True))
+        target.body_html = bleach.linkify(bleach.clean(markdown(value,output_format='html'),
+                                            tags=allowed_tags,strip=True))
+
+db.event.listen(Comment.body,'set',Comment.on_changed_body)
+
 
 #博客与用户点赞表
 thumbs_up = db.Table('thumbs_up',
