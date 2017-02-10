@@ -9,7 +9,7 @@ from .. import db
 #注册
 @auth.route('/register',methods = ['GET','POST'])
 def register():
-    form = RegistrationForm()
+    form = RegisterForm()
     if form.validate_on_submit():
         user = User(email = form.email.data,
                     username = form.username.data,
@@ -20,7 +20,7 @@ def register():
         send_email(user.email,'请确认你的账户',
                                 'auth/email/confirm',user = user,token = token)
         flash(u'确认邮件已经发往了你的邮箱')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.post_share'))
     return render_template('auth/register.html',form = form)
 
 @auth.route('/confirm/<token>')

@@ -51,7 +51,9 @@ def toshare():
 @main.route('/feed/share',methods = ['GET'])
 def post_share():
 	posts = Post.query.filter_by(post_type = 'share').order_by(Post.timestamp.desc()).all()
-	return render_template('share.html',form = form,posts = posts) #分享的文章页面
+
+	return render_template('share.html', posts = posts) #分享的文章页面
+
 
 #share type articles' id
 @main.route('/feed/share/<int:id>',methods = ['GET'])
