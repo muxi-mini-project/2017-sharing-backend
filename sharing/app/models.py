@@ -113,6 +113,8 @@ class User(UserMixin, db.Model):
             except IntegrityError:
                 db.session.rollback()
 
+
+
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
