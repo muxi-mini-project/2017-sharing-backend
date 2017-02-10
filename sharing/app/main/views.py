@@ -51,27 +51,14 @@ def toshare():
 @main.route('/feed/share',methods = ['GET'])
 def post_share():
 	posts = Post.query.filter_by(post_type = 'share').order_by(Post.timestamp.desc()).all()
-
 	return render_template('share.html', posts = posts) #分享的文章页面
-
-
-#share type articles' id
-@main.route('/feed/share/<int:id>',methods = ['GET'])
-def post_share(id):
-    post = Post.query.get_or_404(id)
-    return render_template('article.html',posts = [post])
 
 #博主原创的路由
 @main.route('/feed/original',methods = ['GET'])
 def post_original():
-	posts = Post.query.filter_by(post_type = 'original').order_by(Post.timestamp.desc()).all()
+	form = PostForm()
+	posts = Post.query.filter_by(post_type=form.post_type.data).filter_by(post_type = 'original').order_by(Post.timestamp.desc()).all()
 	return render_template('original.html',form = form,posts = posts) #原创的文章页面
-
-#original type ariticles's id
-@main.route('/feed/original/<int:id>',methods = ['GET'])
-def post_original(id):
-    post = Post.query.get_or_404(id)
-    return render_template('article.html',posts = [post])
 
 @main.route('/edit-profile/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -99,3 +86,9 @@ def edit_profile_admin(id):
     form.confirmed.data = user.confirmed
     form.about_me.data = user.abput_me
     return render_template('edit_profile.html', form=form, user=user)
+
+#具体文章的路由
+@main.route('/feed/post/<int:post_id>')
+def show_post(post_id):
+    render_template("share_post.html", post_id=id)
+
