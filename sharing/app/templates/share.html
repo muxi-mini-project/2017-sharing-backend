@@ -1,18 +1,8 @@
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
-{% import "_macros.html" as macros %}
 
-{% block title %}趣分享{% endblock %}
+{% block title %}SHARING{% endblock %}
 
-{% block page_content %}
-<div class="page-header">
-    <h1>趣分享</h1>
-</div>
-{% include '_posts.html' %}
-{% if pagination %}
-<div class="pagination">
-    {{ macros.pagination_widget(pagination, '.share') }}
-</div>
 {% block content %}
-{% endif %}
+{% include '_post.html' %}
 {% endblock %}
+

@@ -127,12 +127,6 @@ class User(UserMixin, db.Model):
     confirmed = db.Column(db.Boolean,default = False)
     posts = db.relationship('Post',backref = 'author',lazy = 'dynamic')	
 
-
-    @property
-    def followed_posts(self):
-        return Post.query.join(Follow,Follow.followed_id == Post.author_id)\
-                    .filter(Follow.followed_id == self.id)
-
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
