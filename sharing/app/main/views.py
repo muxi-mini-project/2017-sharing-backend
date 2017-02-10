@@ -102,7 +102,7 @@ def edit_profile_admin(id):
 @main.route('/feed/post/<int:post_id>')
 def show_post(post_id):
     post = Post.query.filter_by(id=post_id).get_or_404()
-    render_template("share_post.html", post=post)
+    render_template("show_post.html", post=post)
 
 #关注者的文章路由
 @main.route('/feed/followed',methods = ['GET'])
