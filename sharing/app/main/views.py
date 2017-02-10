@@ -63,8 +63,14 @@ def post_share():
 @main.route('/feed/original',methods = ['GET'])
 def post_original():
 	form = PostForm()
-	posts = Post.query.filter_by(post_type=form.post_type.data).filter_by(post_type = 'original').order_by(Post.timestamp.desc()).all()
-	return render_template('original.html',form = form,posts = posts) #原创的文章页面
+	posts_queryobj = Post.query.filter_by(post_type =\
+                'original').order_by(Post.timestamp.desc())
+	page = request.args.get('page', 1, type=int)
+        pagination = posts_queryobj.paginate(
+                page, per_page=current_app.config['SHARING_POSTS_PER_PAGE'],
+                error_out=False)
+        posts = pagination.items
+        return render_template('original.html',posts = posts) #原创的文章页面
 
 @main.route('/edit-profile/<int:id>', methods=['GET', 'POST'])
 @login_required
