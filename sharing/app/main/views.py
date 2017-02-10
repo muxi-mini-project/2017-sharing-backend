@@ -50,8 +50,14 @@ def toshare():
 #去分享的路由
 @main.route('/feed/share',methods = ['GET'])
 def post_share():
-	posts = Post.query.filter_by(post_type = 'share').order_by(Post.timestamp.desc()).all()
-	return render_template('share.html', posts = posts) #分享的文章页面
+	posts_queryobj = Post.query.filter_by(post_type ='share').order_by\
+                (Post.timestamp.desc())
+	page = request.args.get('page', 1, type=int)
+        pagination = posts_queryobj.paginate(
+                page, per_page=current_app.config['SHARING_POSTS_PER_PAGE'],
+                error_out=False)
+        posts = pagination.items
+        return render_template('share.html', posts = posts) #分享的文章页面
 
 #博主原创的路由
 @main.route('/feed/original',methods = ['GET'])
@@ -90,5 +96,6 @@ def edit_profile_admin(id):
 #具体文章的路由
 @main.route('/feed/post/<int:post_id>')
 def show_post(post_id):
-    render_template("share_post.html", post_id=id)
+    post = Post.query.filter_by(id=post_id).first()
+    render_template("share_post.html", post=post)
 

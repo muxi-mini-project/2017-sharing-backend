@@ -11,7 +11,8 @@
             <div class="post-author"><a href="{{
                     url_for('.user',username=post.author.username)
                     }}">{{post.author.username}}</a>
-            <div class="post-body"><a href="url_for(".show_post", post_id=post.id)">{{post.body}}</a></div>
+            <div class="post-body"><a href="url_for(".show_post",
+                    post_id=post.id)">{{post.body}}</a></div>
         </div>
     </li>
     {% endfor %}
