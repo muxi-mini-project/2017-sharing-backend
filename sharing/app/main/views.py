@@ -51,27 +51,33 @@ def toshare():
 @main.route('/feed/share',methods = ['GET'])
 def post_share():
 	posts = Post.query.filter_by(post_type = 'share').order_by(Post.timestamp.desc()).all()
-
 	return render_template('share.html', posts = posts) #分享的文章页面
-
-
-#share type articles' id
-@main.route('/feed/share/<int:id>',methods = ['GET'])
-def post_share(id):
-    post = Post.query.get_or_404(id)
-    return render_template('article.html',posts = [post])
 
 #博主原创的路由
 @main.route('/feed/original',methods = ['GET'])
 def post_original():
 	posts = Post.query.filter_by(post_type = 'original').order_by(Post.timestamp.desc()).all()
-	return render_template('original.html',form = form,posts = posts) #原创的文章页面
+	return render_template('original.html',posts = posts) #原创的文章页面
 
-#original type ariticles's id
-@main.route('/feed/original/<int:id>',methods = ['GET'])
-def post_original(id):
+#关注者的文章
+@main.route('/feed/followed',methods = ['GET'])
+def post_followed():
+    query = current_user.followed_posts
+    pagination = query.order_by(Post.timestamp.desc()).paginate(
+        page,per_page = current_app.config['FLASK_POSTS_PER_PAGE'],
+            error_out = False)
+    posts = pagination.items
+    return render_template('followed.html',posts =posts,pagination = pagination)
+
+
+
+#具体文章页面
+@main.route（'/feed/article/<int:id>',methods = ['GET'])
+def articles(id):
     post = Post.query.get_or_404(id)
     return render_template('article.html',posts = [post])
+
+
 
 @main.route('/edit-profile/<int:id>', methods=['GET', 'POST'])
 @login_required

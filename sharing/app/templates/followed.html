@@ -2,16 +2,16 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% import "_macros.html" as macros %}
 
-{% block title %}趣分享{% endblock %}
+{% block title %}我的关注{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-    <h1>趣分享</h1>
+    <h1>我的关注</h1>
 </div>
 {% include '_posts.html' %}
 {% if pagination %}
 <div class="pagination">
-    {{ macros.pagination_widget(pagination, '.share') }}
+    {{ macros.pagination_widget(pagination, '.followed') }}
 </div>
 {% endif %}
 {% endblock %}
