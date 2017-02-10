@@ -6,6 +6,7 @@ from .forms import LoginForm, RegisterForm,ChangePasswordForm
 from flask_login import current_user, login_user, logout_user, login_required
 from .. import db
 
+#注册
 @auth.route('/register',methods = ['GET','POST'])
 def register():
     form = RegistrationForm()
@@ -95,30 +96,6 @@ def login():
         flash(u'您的邮箱地址或密码有误')
     return render_template('auth/login.html', form=form)
 
-#登出
-@auth.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    flash(u'你已经退出当前登录')
-    return redirect(url_for('main.index'))
-
-#注册路由已经完成
-@auth.route('/register',methods=['GET', 'POST'])
-def register():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        user = User(email=form.email.data,
-                    username=form.username.data,
-                    password=form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        token = user.generate_confirmation_token()
-        send_email(user.email, '验证您的账号', #send email to who, what subject
-                'auth/email/confirm', user=user, token=token)
-        flash(u'验证邮件已经发送到你的注册邮箱')
-        return redirect(url_for('auth.login'))      
-    return render_template('auth/register.html', form=form)
 
 @auth.before_app_request
 def before_request():
@@ -128,15 +105,12 @@ def before_request():
                 and request.endpoint[:5] != 'auth.':
             return render_template(url_for('auth.unconfirmed'))
 
-
-
-
 @auth.route('/logout')
 @login_required
 
 def logout():
     logout_user()
-    flash('你的账号已登出。')
+    flash(u'你的账号已登出。')
     return redirect(url_for('auth.login'))
 
         
