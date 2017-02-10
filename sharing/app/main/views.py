@@ -50,6 +50,10 @@ def toshare():
 #去分享的路由
 @main.route('/feed/share',methods = ['GET'])
 def post_share():
+<<<<<<< HEAD
+	posts = Post.query.filter_by(post_type = 'share').order_by(Post.timestamp.desc()).all()
+	return render_template('share.html', posts = posts) #分享的文章页面
+=======
 	posts_queryobj = Post.query.filter_by(post_type ='share').order_by\
                 (Post.timestamp.desc())
 	page = request.args.get('page', 1, type=int)
@@ -58,10 +62,36 @@ def post_share():
                 error_out=False)
         posts = pagination.items
         return render_template('share.html', posts = posts) #分享的文章页面
+>>>>>>> 839665810d74d8b410a10228bcf7b27d1c5bdb08
 
 #博主原创的路由
 @main.route('/feed/original',methods = ['GET'])
 def post_original():
+<<<<<<< HEAD
+	posts = Post.query.filter_by(post_type = 'original').order_by(Post.timestamp.desc()).all()
+	return render_template('original.html',posts = posts) #原创的文章页面
+
+#关注者的文章
+@main.route('/feed/followed',methods = ['GET'])
+def post_followed():
+    query = current_user.followed_posts
+    pagination = query.order_by(Post.timestamp.desc()).paginate(
+        page,per_page = current_app.config['FLASK_POSTS_PER_PAGE'],
+            error_out = False)
+    posts = pagination.items
+    return render_template('followed.html',posts =posts,pagination = pagination)
+
+
+
+#具体文章页面
+@main.route（'/feed/article/<int:id>',methods = ['GET'])
+def articles(id):
+    post = Post.query.get_or_404(id)
+    return render_template('article.html',posts = [post])
+
+
+
+=======
 	form = PostForm()
 	posts_queryobj = Post.query.filter_by(post_type =\
                 'original').order_by(Post.timestamp.desc())
@@ -72,6 +102,7 @@ def post_original():
         posts = pagination.items
         return render_template('original.html',posts = posts) #原创的文章页面
 
+>>>>>>> 839665810d74d8b410a10228bcf7b27d1c5bdb08
 @main.route('/edit-profile/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
