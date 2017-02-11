@@ -238,21 +238,21 @@ class User(UserMixin, db.Model):
         return self.followers.filter_by(
             follower_id=user.id).first() is not None
 
-	def generate_confirmation_token(self,expiration = 360):
-		s = Serializer(current_app.config['SECRET_KEY'],expiration)
-		return s.dumps({'confirm':self.id})
+    def generate_confirmation_token(self,expiration = 360):
+	    s = Serializer(current_app.config['SECRET_KEY'],expiration)
+	    return s.dumps({'confirm':self.id})
 
-	def confirm(self,token):
-		s = Serializer(current_app.config['SECRET_KEY'])
-		try:
-			data = s.loads(token)
-		except:
-			return s.loads(token)
-		if data.get('confirm') != self.id:
-			return False
-		self.confirmed = True
-		db.session.add(self)
-		return True
+    def confirm(self,token):
+	    s = Serializer(current_app.config['SECRET_KEY'])
+	    try:
+		data = s.loads(token)
+	    except:
+		return s.loads(token)
+	    if data.get('confirm') != self.id:
+		return False
+	    self.confirmed = True
+	    db.session.add(self)
+	    return True
 
 #不太会写...
     def to_json(self):
@@ -341,7 +341,7 @@ class Post(db.Model):
     body_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow,
             doc="created_at")
-    #post_type = db.Column(db.String,nullable = False,default = 'share')#文章类型默认为分享
+    post_type = db.Column(db.String, nullable = False, default = "share")#文章类型默认为分享
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     comments = db.relationship('Comment', backref='post',lazy='dynamic')
     #这里是一个用户对文章的点赞，每位用户对一篇文章只可以点一次赞，而且可以取消点赞，具体怎么实现有待商榷,很明确的是这里要用到many
@@ -359,9 +359,13 @@ class Post(db.Model):
         user_count = User.query.count()
         for i in range(count):
             u = User.query.offset(randint(0, user_count - 1)).first()
+            index = randint(0,1)
+            post_type_list = ["share", "original"]
             p = Post(body=forgery_py.lorem_ipsum.sentences(randint(1, 5)),
                      timestamp=forgery_py.date.date(True),
-                     author=u)
+                     author=u,
+                     post_type = post_type_list[index]
+                    )
             db.session.add(p)
             db.session.commit()
 
@@ -394,5 +398,5 @@ class Post(db.Model):
         if body is None or body == '':
             raise ValidationError('文章未输入内容')
         return Post(body = body)
-                
+     
 db.event.listen(Post.body, 'set', Post.on_changed_body)
