@@ -6,15 +6,9 @@ from wtforms.validators import Email
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app, request,url_for
 from datetime import datetime
-<<<<<<< Updated upstream
-from app.exceptions import ValidationError
-import hashlib
-import bleach
-=======
 import hashlib, bleach
 from markdown import markdown
 
->>>>>>> Stashed changes
 
 class Permission:
     COMMENT = 0x02
@@ -268,6 +262,17 @@ class User(UserMixin, db.Model):
         'posts':url_for('api.get_user_posts',id = self.id,_external= True),
         'post_count':self.posts.count()
         }
+        return json_user
+
+    @staticmethod
+    def from_json(json_user):
+        username = json_user.get('username')
+        password = json_user.get('password')
+        if username is None or username == '':
+            raise ValidationError('用户名不能为空哦！')
+        if password is None or password == '':
+            raise ValidationError('请输入密码！')
+        return User(username=username, password=password)
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -323,10 +328,10 @@ db.event.listen(Comment.body,'set',Comment.on_changed_body)
 
 
 #博客与用户点赞表
-thumbs_up = db.Table('thumbs_up',
-        db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-        db.Column('post_id', db.Integer, db.ForeignKey('posts.id'))
-        )
+#thumbs_up = db.Table('thumbs_up',
+#        db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+#        db.Column('post_id', db.Integer, db.ForeignKey('posts.id'))
+#        )
 
 class Post(db.Model):
     __tablename__ = 'posts'
@@ -339,9 +344,9 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     comments = db.relationship('Comment', backref='post',lazy='dynamic')
     #这里是一个用户对文章的点赞，每位用户对一篇文章只可以点一次赞，而且可以取消点赞，具体怎么实现有待商榷,很明确的是这里要用到many
-#to many relationship sql
-    thumbs_up = db.relationship('User', secondary=thumbs_up,backref=db.backref('posts', lazy='dynamic'))
-    thumbs_up_counter = db.Column(db.Integer) 
+    #to many relationship sql
+    #thumbs_up = db.relationship('User', secondary=thumbs_up,backref=db.backref('posts', lazy='dynamic'))
+    #thumbs_up_counter = db.Column(db.Integer) 
      
 
     @staticmethod
@@ -374,7 +379,7 @@ class Post(db.Model):
         'body':self.body,
         'body_html':self.body_html,
         'timestamp':self.timestamp,
-        'post_type':self.post_type,
+        #'post_type':self.post_type,
         'author':url_for('api.get_user',id = self.author_id,_external=True),
         'comments':url_for('api.get_post_comments',id = self.id,_external=True),
         'comment_count':self.comments.count()
@@ -384,7 +389,7 @@ class Post(db.Model):
     @staticmethod
     def from_json(json_post):
         body = json_post.get('body')
-        post_type = json_post.get('post_type')
+        #post_type = json_post.get('post_type')
         if body is None or body == '':
             raise ValidationError('文章未输入内容')
         return Post(body = body)

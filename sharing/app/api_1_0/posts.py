@@ -9,7 +9,7 @@ from .errors import forbidden
 @api.route('/feed/share')
 def get_share_post():
     page = request.args.get('page',1,type = int)
-    pagination = Post.query.filter_by(post_type = 'share').paginate(
+    pagination = Post.query.paginate(
         page,per_page = current_app.config['SHARING_POSTS_PER_PAGE'],
         error_out = False)
     posts = pagination.items
@@ -29,8 +29,8 @@ def get_share_post():
 @api.route('/feed/original')
 def get_original_post():
     page = request.args.get('page',1,type = int)
-    pagination = Post.query.filter_by(post_type = 'original').pagination(
-        page,per_page = current_app.config['FLASK_POSTS_PER_PAGE'],
+    pagination = Post.query.paginate(
+        page,per_page = current_app.config['SHARING_POSTS_PER_PAGE'],
         error_out = False)
     posts = pagination.items
     prev = None

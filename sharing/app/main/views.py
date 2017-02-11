@@ -141,7 +141,7 @@ def edit(post_id):
             not current_user.can(Permission.ADMINISTER):
         abort(403)
     form = PostForm()
-    if form.validate_on_submit()
+    if form.validate_on_submit():
         post.body = form.body.data
         db.session.add(post)
         flash(u'这篇博文已经更新')

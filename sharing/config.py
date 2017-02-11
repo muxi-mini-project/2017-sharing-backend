@@ -1,5 +1,6 @@
 #coding:utf-8
 import os
+from flask_sqlalchemy import SQLAlchemy
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -15,7 +16,7 @@ class Config:
     FLASKY_MAIL_SENDER = '15387550833@163.com'
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
     SQLALCHEMY_TRACK_MODIFICATIONS = True
-    SHARING_POST_PER_PAGE = 15
+    SHARING_POSTS_PER_PAGE = 15
     FLASKY_FOLLOWERS_PER_PAGE = 15
     SHARING_COMMENTS_PER_PAGE = 5
 
