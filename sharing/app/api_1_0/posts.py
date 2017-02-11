@@ -5,8 +5,10 @@ from ..models import Post,Permission
 from . import api
 from .decorators import permission_required
 from .errors import forbidden
+
+
 #趣分享
-@api.route('/feed/share')
+@api.route('/feed/share/')
 def get_share_post():
     page = request.args.get('page',1,type = int)
     pagination = Post.query.paginate(
@@ -15,10 +17,10 @@ def get_share_post():
     posts = pagination.items
     prev = None
     if pagination.has_prev:
-        prev = url_for('api.get_posts',page = page - 1,_external = True)
+        prev = url_for('api.get_share_post',page = page - 1,_external = True)
     next = None
     if pagination.has_next:
-        next = url_for('api.get_posts',page = page + 1,_external = True)
+        next = url_for('api.get_share_post',page = page + 1,_external = True)
     return jsonify({
         'posts': [post.to_json() for post in posts],
         'prev': prev,
@@ -73,7 +75,7 @@ def get_post(id):
     return jsonify(post.to_json())
 
 #写文章
-@api.route('/toshare/',methods= ['GET','POST'])
+'''@api.route('/toshare/',methods= ['GET','POST'])
 @permission_required(Permission.WRITE_ARTICLES)
 def new_post():
     post = Post.from_json(request.json)
@@ -84,7 +86,7 @@ def new_post():
     {
     'Location': url_for('api.get_post',id = post.id,_external = True)
     }
-
+'''
 #修改文章
 @api.route('/toshare/<int:id>',methods = ['PUT'])
 @permission_required(Permission.WRITE_ARTICLES)

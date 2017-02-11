@@ -386,7 +386,7 @@ class Post(db.Model):
         'timestamp':self.timestamp,
         #'post_type':self.post_type,
         'author':url_for('api.get_user',id = self.author_id,_external=True),
-        'comments':url_for('api.get_post_comments',id = self.id,_external=True),
+        'comments':url_for('api.get_post_comment',id = self.id,_external=True),
         'comment_count':self.comments.count()
         }
         return json_post
