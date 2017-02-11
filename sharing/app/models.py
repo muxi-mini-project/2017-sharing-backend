@@ -257,17 +257,18 @@ class User(UserMixin, db.Model):
 #不太会写...
     def to_json(self):
         json_user = {
-        'url':url_for('api.get_user',id = self.id,_external = True),
-        'username':self.username,
-        'posts':url_for('api.get_user_posts',id = self.id,_external= True),
-        'post_count':self.posts.count()
+        "url":url_for('api.get_user',id = self.id,_external = True),
+        "username":self.username,
+        "posts":url_for('api.get_user_posts',id = self.id,_external= True),
+        "post_count":self.posts.count()
         }
         return json_user
 
     @staticmethod
     def from_json(json_user):
-        username = json_user.get('username')
-        password = json_user.get('password')
+        username = json_user.get("username")
+        password = json_user.get("password")
+        email = json_user.get("email")
         if username is None or username == '':
             raise ValidationError('用户名不能为空哦！')
         if password is None or password == '':

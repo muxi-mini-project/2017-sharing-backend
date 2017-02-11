@@ -7,17 +7,21 @@ from . import api
 #注册
 @api.route('/register/',methods = ['POST'])
 def register():
-        user = User.from_json(request.json)
-        db.session.add(user)
-        db.session.commit()
+        if request.method == 'POST':
+            email = request.get_json().get("email")
+            password = request.get_json().get("password")
+            username = request.get_json().get("username")
+            user = User ( username= username,email=email ,password=password)
+            #user = User.from_json(request.json)
+            db.session.add(user)
+            db.session.commit()
+            user_id=User.query.filter_by(email=email).first().id
         #token = user.generate_confirmation_token()
         #send_email(user.email,'请确认你的账户',
         #                       'auth/email/confirm',user = user,token = token)
         #flash(u'确认邮件已经发往了你的邮箱')
-        return jsonify(user.to_json()),201,\
-        {
-        'Location':url_for('api.get_user_id',id = user.id,_external = True)
-        }       
-
+        return jsonify({
+                "created":user_id
+                })
 
 
