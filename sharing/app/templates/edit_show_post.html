@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SHARING - edit_show_post{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>编辑博客文章</h1>
+</div>
+<div>
+    {{ wtf.quick_form(form) }}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown }}
+{% endblock %}
+

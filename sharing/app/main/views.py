@@ -116,7 +116,7 @@ def show_post(post_id):
         page = (post.comments.count() - 1) / \
                 current_app.config['FLASKY_COMMENTS_PRE_PAGE'] + 1
     pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
-                    page,per_page = current_app.comfig['FLASKY_COMMENTS_PRE_PAGE'],
+                    page,per_page = current_app.comfig['SHARING_COMMENTS_PRE_PAGE'],
                     error_out = False)
     comment = pagination.items
     return render_template("show_post.html", post=[post], form = form ,
@@ -132,4 +132,19 @@ def post_followed():
         posts = pagination.items
         return render_template('followed_post.html',posts=posts,pagination=pagination)
 
-
+#show_post的编辑页面路由
+@main.route('/edit_post/<int:post_id>', methods=['get', 'post'])
+@login_required
+def edit(post_id):
+    post = Post.query.get_or_404(post_id)
+    if current_user != post.author and \
+            not current_user.can(Permission.ADMINISTER):
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit()
+        post.body = form.body.data
+        db.session.add(post)
+        flash(u'这篇博文已经更新')
+        return redirect(url_for('.show_post', post_id=post_id))
+    form.body.data = post.body
+    return render_template('edit_show_post.html', form=form)
