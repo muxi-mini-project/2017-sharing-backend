@@ -9,8 +9,8 @@ from .errors import forbidden
 @api.route('/feed/share')
 def get_share_post():
     page = request.args.get('page',1,type = int)
-    pagination = Post.query.filter_by(post_type = 'share').pagination(
-        page,per_page = current_app.config['FLASK_POSTS_PER_PAGE'],
+    pagination = Post.query.filter_by(post_type = 'share').paginate(
+        page,per_page = current_app.config['SHARING_POSTS_PER_PAGE'],
         error_out = False)
     posts = pagination.items
     prev = None
