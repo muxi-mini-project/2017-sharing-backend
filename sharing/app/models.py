@@ -257,17 +257,18 @@ class User(UserMixin, db.Model):
 #不太会写...
     def to_json(self):
         json_user = {
-        'url':url_for('api.get_user',id = self.id,_external = True),
-        'username':self.username,
-        'posts':url_for('api.get_user_posts',id = self.id,_external= True),
-        'post_count':self.posts.count()
+        "url":url_for('api.get_user',id = self.id,_external = True),
+        "username":self.username,
+        "posts":url_for('api.get_user_posts',id = self.id,_external= True),
+        "post_count":self.posts.count()
         }
         return json_user
 
     @staticmethod
     def from_json(json_user):
-        username = json_user.get('username')
-        password = json_user.get('password')
+        username = json_user.get("username")
+        password = json_user.get("password")
+        email = json_user.get("email")
         if username is None or username == '':
             raise ValidationError('用户名不能为空哦！')
         if password is None or password == '':
@@ -340,7 +341,7 @@ class Post(db.Model):
     body_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow,
             doc="created_at")
-    post_type = db.Column(db.String,nullable = False,default = 'share')#文章类型默认为分享
+    #post_type = db.Column(db.String,nullable = False,default = 'share')#文章类型默认为分享
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     comments = db.relationship('Comment', backref='post',lazy='dynamic')
     #这里是一个用户对文章的点赞，每位用户对一篇文章只可以点一次赞，而且可以取消点赞，具体怎么实现有待商榷,很明确的是这里要用到many
