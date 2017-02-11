@@ -1,12 +1,13 @@
+#coding:utf-8
 from flask import jsonify, request, g, abort, url_for, current_app
 from .. import db
 from ..models import Post,Permission
 from . import api
 from .decorators import permission_required
 from .errors import forbidden
-
+#趣分享
 @api.route('/feed/share')
-def get_post():
+def get_share_post():
     page = request.args.get('page',1,type = int)
     pagination = Post.query.filter_by(post_type = 'share').pagination(
         page,per_page = current_app.config['FLASK_POSTS_PER_PAGE'],
@@ -24,9 +25,9 @@ def get_post():
         'next': next,
         'count': pagination.total    
         })
-
+#博主原创
 @api.route('/feed/original')
-def get_post():
+def get_original_post():
     page = request.args.get('page',1,type = int)
     pagination = Post.query.filter_by(post_type = 'original').pagination(
         page,per_page = current_app.config['FLASK_POSTS_PER_PAGE'],
@@ -44,9 +45,9 @@ def get_post():
         'next': next,
         'count': pagination.total    
         })
-
+#我的关注
 @api.route('/feed/followed')
-def get_post():
+def get_followed_post():
     page = request.args.get('page',1,type = int)
     query = current_user.followed_posts
     pagination = query.order_by(Post.timestamp.desc()).paginate(
@@ -65,12 +66,13 @@ def get_post():
         'next': next,
         'count': pagination.total    
         })
-
+#具体文章
 @api.route('/posts/<int:id>')
 def get_post(id):
     post = Post.query.get_or_404(id)
     return jsonify(post.to_json())
 
+#写文章
 @api.route('/toshare/',methods= ['GET','POST'])
 @permission_required(Permission.WRITE_ARTICLES)
 def new_post():
@@ -80,9 +82,10 @@ def new_post():
     db.session.commit()
     return jsonify(post.to_json()),201,\
     {
-    'Location': url_for('api.get_post',id = post.id,_external = True)}
+    'Location': url_for('api.get_post',id = post.id,_external = True)
     }
 
+#修改文章
 @api.route('/toshare/<int:id>',methods = ['PUT'])
 @permission_required(Permission.WRITE_ARTICLES)
 def edit_post(id):
