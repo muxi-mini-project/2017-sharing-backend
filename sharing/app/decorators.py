@@ -1,9 +1,10 @@
+#coding:utf-8
 #api路由函数用的装饰器
 from functools import wraps
 from flask import abort, request
 from flask_login import current_user
 from .models import Permission
-from base64
+import base64
 
 def admin_required(f):
     '''
@@ -22,14 +23,14 @@ def admin_required(f):
             return f(*args, **kwargs)
         else:
             return jsonify({'message':'401 unAuthorization'})
-        return decorated
+    return decorated
 
 def login_required(f):
     '''
     要求登录的装饰器
     '''
     @wraps(f)
-    def decorate(*args, **kwargs):
+    def decorated(*args, **kwargs):
         token_header = request.header.get('Authorization', None)
         if token_header:
             token_hash = token_header[6:]
@@ -39,5 +40,5 @@ def login_required(f):
             return f(*args, **kwargs)
         else:
             return jsonify({'message':'401 unAuthorization'}), 401
-        return decorated
+    return decorated
 
