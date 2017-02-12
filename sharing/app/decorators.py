@@ -6,6 +6,19 @@ from flask_login import current_user
 from .models import Permission
 import base64
 
+def permission_required(permission):
+    @wraps(f)
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not current_user.can(permission):
+                abort(403)
+            return f(*arfs, **kwargs)
+        return decorated_function
+    return decorator
+
+
+
 def admin_required(f):
     '''
     认证管理员的装饰器
