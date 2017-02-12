@@ -6,6 +6,19 @@ from flask_login import current_user
 from .models import Permission
 import base64
 
+def permission_required(permission):
+    @wraps(f)
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not current_user.can(permission):
+                abort(403)
+            return f(*arfs, **kwargs)
+        return decorated_function
+    return decorator
+
+
+
 def admin_required(f):
     '''
     认证管理员的装饰器
@@ -31,7 +44,7 @@ def login_required(f):
     '''
     @wraps(f)
     def decorated(*args, **kwargs):
-        token_header = request.header.get('Authorization', None)
+        token_header = request.headers.get('Authorization', None)
         if token_header:
             token_hash = token_header[6:]
             decode_token = base64.b64decode(token_hash)
