@@ -15,12 +15,13 @@ def register():
             db.session.add(user)
             db.session.commit()
             user_id=User.query.filter_by(email=email).first().id
-        #token = user.generate_confirmation_token()
+            token = user.generate_confirmation_token()
         #send_email(user.email,'请确认你的账户',
         #                      'auth/email/confirm',user = user,token = token)
         #flash(u'确认邮件已经发往了你的邮箱')
         return jsonify({
-                "created":user_id
+                "created":user_id,
+                "token":token
                 })
 
 

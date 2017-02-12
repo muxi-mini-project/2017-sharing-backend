@@ -11,7 +11,7 @@ from .errors import forbidden
 @api.route('/feed/share/')
 def get_share_post():
     page = request.args.get('page',1,type = int)
-    pagination = Post.query.paginate(
+    pagination = Post.query.filter_by(post_type='share').paginate(
         page,per_page = current_app.config['SHARING_POSTS_PER_PAGE'],
         error_out = False)
     posts = pagination.items
@@ -28,19 +28,19 @@ def get_share_post():
         'count': pagination.total    
         })
 #博主原创
-@api.route('/feed/original')
+@api.route('/feed/original/')
 def get_original_post():
     page = request.args.get('page',1,type = int)
-    pagination = Post.query.paginate(
+    pagination = Post.query.filter_by(post_type="original").paginate(
         page,per_page = current_app.config['SHARING_POSTS_PER_PAGE'],
         error_out = False)
     posts = pagination.items
     prev = None
     if pagination.has_prev:
-        prev = url_for('api.get_posts',page = page - 1,_external = True)
+        prev = url_for('api.get_original_post',page = page - 1,_external = True)
     next = None
     if pagination.has_next:
-        next = url_for('api.get_posts',page = page + 1,_external = True)
+        next = url_for('api.get_original_post',page = page + 1,_external = True)
     return jsonify({
         'posts': [post.to_json() for post in posts],
         'prev': prev,

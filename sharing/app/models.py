@@ -383,6 +383,7 @@ class Post(db.Model):
         'url':url_for('api.get_post',id = self.id,_external=True),
         'body':self.body,
         'body_html':self.body_html,
+        'post_type':self.post_type,
         'timestamp':self.timestamp,
         #'post_type':self.post_type,
         'author':url_for('api.get_user',id = self.author_id,_external=True),

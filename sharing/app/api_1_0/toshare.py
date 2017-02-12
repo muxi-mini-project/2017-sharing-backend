@@ -4,10 +4,11 @@ from ..models import Post,Permission
 from .. import db
 from . import api
 from .decorators import permission_required
+from app.api_1_0.authentication import auth
 
 #去分享的路由
 @api.route('/toshare/',methods = ['POST'])
-@permission_required(Permission.WRITE_ARTICLES)
+@auth.login_required
 def toshare():
     if request.method == 'POST':
         author = request.get_json().get("author")
