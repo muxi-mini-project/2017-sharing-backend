@@ -12,7 +12,6 @@ def register():
             password = request.get_json().get("password")
             username = request.get_json().get("username")
             user = User ( username= username,email=email ,password=password)
-            user = User.from_json(request.json)
             db.session.add(user)
             db.session.commit()
             user_id=User.query.filter_by(email=email).first().id
