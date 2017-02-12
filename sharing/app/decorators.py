@@ -1,7 +1,7 @@
 #coding:utf-8
 #api路由函数用的装饰器
 from functools import wraps
-from flask import abort, request
+from flask import abort, request,jsonify
 from flask_login import current_user
 from .models import Permission
 import base64
@@ -31,7 +31,7 @@ def login_required(f):
     '''
     @wraps(f)
     def decorated(*args, **kwargs):
-        token_header = request.header.get('Authorization', None)
+        token_header = request.headers.get('Authorization', None)
         if token_header:
             token_hash = token_header[6:]
             decode_token = base64.b64decode(token_hash)

@@ -11,17 +11,19 @@ from app.api_1_0.authentication import auth
 @auth.login_required
 def toshare():
     if request.method == 'POST':
-        author = request.get_json().get("author")
         body = request.get_json().get("body")
-        timestamp = request.get_json().get("timestamp")
-        #post_type = request.get_json().get("post_type")
-        post = Post(author = author,body = body,timestamp = timestamp)
-        post_id = Post.query.first().id
+        post_type = request.get_json().get("post_type")
+        #author_id = Post.author_id
+        post = Post(body = body,post_type=post_type)
         db.session.add(post)
         db.session.commit()
+        author_id = post.query.first().author_id
+        timestamp = post.query.first().timestamp
+        post_id = post.query.first().id
     return jsonify({
-        "author":author,
         "body":body,
+        "post_type":post_type,
+        "author_id":author_id,
         "timestamp":timestamp,
         "post_id":post_id
         })

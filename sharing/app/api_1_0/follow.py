@@ -1,5 +1,5 @@
 #coding:utf-8
-from flask import url_for, jsonify, flash, request,g, jsonify
+from flask import url_for, jsonify, flash, request,g
 from ..decorators import login_required   
 from .. import db
 from ..models import User, Follow

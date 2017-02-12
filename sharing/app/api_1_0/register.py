@@ -7,11 +7,11 @@ from . import api
 #注册
 @api.route('/register/',methods = ['POST'])
 def register():
-        if request.method == 'POST':
+        if  request.method == 'POST':
             email = request.get_json().get("email")
             password = request.get_json().get("password")
             username = request.get_json().get("username")
-            user = User ( username= username,email=email ,password=password)
+            user = User(username= username,email=email ,password=password)
             db.session.add(user)
             db.session.commit()
             user_id=User.query.filter_by(email=email).first().id
