@@ -34,7 +34,7 @@ def before_request():
             not g.current_user.confirmed:
         return forbidden('用户暂未确认')
 
-@api.route('/token')
+@api.route('/token/')
 def get_token():
     if g.current_user.is_anonymous or g.token_used:
         return unauthorized('无效认证')
