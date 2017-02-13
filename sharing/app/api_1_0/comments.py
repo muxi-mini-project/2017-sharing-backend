@@ -5,7 +5,7 @@ from ..models import Post, Permission,Comment
 from . import api
 from .decorators import permission_required
 
-#对应文章的评论
+#获取对应文章的评论
 @api.route('/post/<int:id>/comments/')
 def get_post_comment(id):
     post = Post.query.get_or_404(id)
@@ -36,4 +36,6 @@ def new_post_comment(id):
     comment.post = post 
     db.session.add(comment)
     db.session.commit()
-    return jsonify(comment.to_json()),201
+    return jsonify(comment.to_json()),201 \
+
+
