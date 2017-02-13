@@ -1,7 +1,7 @@
 #coding:utf-8
 from flask import jsonify, request, g, abort, url_for, current_app
 from .. import db
-from ..models import Post, Permission
+from ..models import Post, Permission,Comment
 from . import api
 from .decorators import permission_required
 
@@ -29,7 +29,6 @@ def get_post_comment(id):
 
 #撰写评论
 @api.route('/post/<int:id>/comments/',methods = ['POST'])
-@permission_required(Permission.COMMENT)
 def new_post_comment(id):
     post = Post.query.get_or_404(id)
     comment = Comment.from_json(request.json)
@@ -37,5 +36,4 @@ def new_post_comment(id):
     comment.post = post 
     db.session.add(comment)
     db.session.commit()
-    return jsonify(comment.to_json()),201, \
-    {'Location':url_for('api.get_comment',id = comment.id,_external =True)}
+    return jsonify(comment.to_json()),201
