@@ -11,4 +11,4 @@ def logout():
     logout_user()
     return jsonify({
         "message":"您已登出"
-        })  
+        })

@@ -16,4 +16,7 @@ def toshare():
         post.author_id = current_user.id
         db.session.add(post)
         db.session.commit()
-    return jsonify(post.to_json()), 201 \
+    return jsonify(post.to_json()), 201
+
+
+

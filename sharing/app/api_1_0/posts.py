@@ -5,7 +5,7 @@ from ..models import Post,Permission
 from . import api
 from .decorators import permission_required
 from .errors import forbidden
-
+from flask_login import login_required,current_user
 
 #趣分享
 @api.route('/feed/share/')
@@ -89,13 +89,15 @@ def new_post():
     }
 '''
 #修改文章
-@api.route('/toshare/<int:id>',methods = ['PUT'])
-@permission_required(Permission.WRITE_ARTICLES)
+@api.route('/toshare/<int:id>/',methods = ['PUT'])
+@login_required
 def edit_post(id):
     post = Post.query.get_or_404(id)
-    if g.current_user != post.author and \
-            not g.current_user.can(Permission.ADMINISTER):
-            return forbidden('您没有此权限')
+    if current_user.id != post.author_id:
+    #and \
+    #        not g.current_user.can(Permission.ADMINISTER):
+        return forbidden('您没有此权限')
     post.body = request.json.get('body',post.body)
     db.session.add(post)
+    db.session.commit()
     return jsonify(post.to_json())
