@@ -389,17 +389,18 @@ class Post(db.Model):
         'body_html':self.body_html,
         'post_type':self.post_type,
         'timestamp':self.timestamp,
-        'author':url_for('api.get_user',id = self.author_id,_external=True),
-        'comments':url_for('api.get_post_comment',id = self.id,_external=True),
-        'comment_count':self.comments.count()
+        'author_id':current_user.id 
+        #'author_id':self.author_id
+        #'comments':url_for('api.get_post_comment',id = self.id,_external=True),
+        #'comment_count':self.comments.count()
         }
         return json_post
 
     @staticmethod
     def from_json(json_post):
         body = json_post.get('body')
-        author = json_post.get('author')
         post_type = json_post.get('post_type')
+
         if body is None or body == '':
             raise ValidationError('文章未输入内容')
         return Post(body = body)
