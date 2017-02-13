@@ -68,6 +68,7 @@ def get_followed_post():
         'next': next,
         'count': pagination.total    
         })
+
 #具体文章
 @api.route('/posts/<int:id>')
 def get_post(id):
