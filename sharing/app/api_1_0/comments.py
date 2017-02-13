@@ -4,6 +4,7 @@ from .. import db
 from ..models import Post, Permission,Comment
 from . import api
 from .decorators import permission_required
+from flask_login import login_required,current_user
 
 #对应文章的评论
 @api.route('/post/<int:id>/comments/')
@@ -32,7 +33,7 @@ def get_post_comment(id):
 def new_post_comment(id):
     post = Post.query.get_or_404(id)
     comment = Comment.from_json(request.json)
-    comment.author = g.current_user
+    comment.author_id = current_user.id
     comment.post = post 
     db.session.add(comment)
     db.session.commit()

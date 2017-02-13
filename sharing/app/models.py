@@ -254,7 +254,7 @@ class User(UserMixin, db.Model):
 	    db.session.add(self)
 	    return True
 
-#不太会写...
+
     def to_json(self):
         json_user = {
         "username":self.username,
@@ -303,7 +303,7 @@ class Comment(db.Model):
     author_id = db.Column(db.Integer,db.ForeignKey('users.id'))
     post_id = db.Column(db.Integer,db.ForeignKey('posts.id'))
     #没写好
-    like = db.Column(db.Integer, default=0, doc='评论对象的点赞数目')
+    #like = db.Column(db.Integer, default=0, doc='评论对象的点赞数目')
 
     @staticmethod
     def on_changed_body(target,value,oldvalue,initiator):
@@ -312,12 +312,12 @@ class Comment(db.Model):
                                             tags=allowed_tags,strip=True))
     def to_json(self):
         json_comment = {
-        'url':url_for('api.get_comment',id = self.id,_external = True),
-        'post':url_for('api.get_post',id = self.author_id,_external = True),
+        'url':url_for('api.get_post_comment',id = self.id,_external = True),
+        'post':url_for('api.get_share_post',id = self.author_id,_external = True),
         'body': self.body,
         'body_html': self.body_html,
         'timestamp': self.timestamp,
-        'author': url_for('api.get_user', id=self.author_id,_external=True)        
+        'author_id':self.author_id
         }
         return json_comment
 
