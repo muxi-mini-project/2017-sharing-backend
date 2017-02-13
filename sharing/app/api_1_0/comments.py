@@ -11,7 +11,7 @@ from flask_login import login_required,current_user
 def get_post_comment(id):
     post = Post.query.get_or_404(id)
     page = request.args.get('page',1,type = int)
-    pagination = post.comments.order_by(Comment.timestamp.asc()).pagination(
+    pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
         page,per_page = current_app.config['SHARING_COMMENT_PER_PAGE'],
         error_out = False)
     comments = pagination.items
@@ -31,6 +31,7 @@ def get_post_comment(id):
 #撰写评论
 @api.route('/post/<int:id>/comments/',methods = ['POST'])
 def new_post_comment(id):
+  if request.method == 'POST':   
     post = Post.query.get_or_404(id)
     comment = Comment.from_json(request.json)
     comment.author_id = current_user.id

@@ -18,7 +18,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SHARING_POSTS_PER_PAGE = 15
     FLASKY_FOLLOWERS_PER_PAGE = 15
-    SHARING_COMMENTS_PER_PAGE = 5
+    SHARING_COMMENT_PER_PAGE = 5
 
     @staticmethod
     def init_app(app):

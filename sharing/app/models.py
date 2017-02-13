@@ -302,6 +302,7 @@ class Comment(db.Model):
     timestamp = db.Column(db.DateTime,index=True,default=datetime.utcnow,doc='created_at')
     author_id = db.Column(db.Integer,db.ForeignKey('users.id'))
     post_id = db.Column(db.Integer,db.ForeignKey('posts.id'))
+    body_html = db.Column(db.Text)
     #没写好
     #like = db.Column(db.Integer, default=0, doc='评论对象的点赞数目')
 
